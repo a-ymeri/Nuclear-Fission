@@ -5,7 +5,6 @@ class Atom {
   PVector location;
   PVector velocity;
   PVector acceleration;
-  int x, y;
 
   Atom(int atomicNumber, int neutrons, float x, float y) {
     location = new PVector(x, y);
@@ -23,7 +22,10 @@ class Atom {
     ellipse(location.x+6, location.y-2, 5*mass, 5*mass);
     ellipse(location.x+2, location.y+6, 5*mass, 5*mass);
     ellipse(location.x+11, location.y+5, 5*mass, 5*mass);
-    fill(#D32B2B);
+    if(atomicNumber>90)
+      fill(#D32B2B);
+    else
+      fill(#666666);
     ellipse(location.x+3, location.y+2, 5*mass, 5*mass);
     ellipse(location.x+10, location.y+1, 5*mass, 5*mass);
     ellipse(location.x+6, location.y+4, 5*mass, 5*mass);
@@ -42,8 +44,10 @@ class Atom {
         splitAtom(atoms);
         particles.remove(i);
         for (int j = 0; j<3; j++) {
-          PVector location1 = new PVector(location.x+10*j, location.y+10*j);
-          PVector velocity1 = new PVector(1, 1);
+          float velocityX = random(-1,1);
+          float velocityY = random(-1,1);
+          PVector location1 = new PVector(location.x+velocityX, location.y+velocityY);
+          PVector velocity1 = new PVector(velocityX,velocityY);
           particles.add(new Particle(location1, velocity1));
         }
         break;
@@ -52,8 +56,10 @@ class Atom {
   }
 
   void splitAtom(ArrayList<Atom> atoms) {
-    Atom kr = new Atom(36, 55, location.x+5, location.y+5);
-    Atom ba = new Atom(56, 86, location.x+5, location.y-5);
+    float random = random(-10,10);
+    Atom kr = new Atom(36, 55, location.x+random, location.y+random);
+    random = random(-10,10);
+    Atom ba = new Atom(56, 86, location.x+random, location.y-random);
     atoms.add(kr);
     atoms.add(ba);
     atoms.remove(this);
