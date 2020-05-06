@@ -36,7 +36,7 @@ class Atom {
     velocity = velocity.add(acceleration);
   }
 
-  void collide(ArrayList<Particle> particles, ArrayList<Atom> atoms) {
+  float collide(ArrayList<Particle> particles, ArrayList<Atom> atoms) {
     float radius = 10;
     for (int i =0; i<particles.size(); i++) {
       float distance = PVector.sub(particles.get(i).location, this.location).mag();
@@ -50,9 +50,10 @@ class Atom {
           PVector velocity1 = new PVector(velocityX,velocityY);
           particles.add(new Particle(location1, velocity1));
         }
-        break;
+        return 40;
       }
     }
+    return 0;
   }
 
   void splitAtom(ArrayList<Atom> atoms) {

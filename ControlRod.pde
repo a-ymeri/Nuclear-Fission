@@ -15,17 +15,7 @@ class ControlRod {
     fill(#4C30CE);
     strokeWeight(4);
     rect(location.x, location.y, _width, _height); //one rod
-    fill(#EAE126);
-    //noStroke();
-    rect(width/4-10, 230, 650, 30);
-    fill(#050500);
-    textSize(24);
-    text("C O N T R O L     R O D S", width/4+80, 255);
-    fill(#FFFFFF);
-    strokeWeight(2);
-    rect(870, 210, 70, 70);
-    fill(#D61A1D);
-    ellipse(905, 245, 50, 50); //Button
+   
   }
 
   void step() {
