@@ -4,28 +4,44 @@ ArrayList<Particle> particles;
 boolean fire = false;
 boolean rodUp = false;
 float energy;
+boolean lockedOn;
 
+int handleX,handleY, handleWidth, handleHeight;
+int containerX, containerY, containerWidth, containerHeight;
+int yOffSet;
 void setup() {
-  size(1000, 700);
+  size(1920, 1080);
   frameRate(50);
   init();
 }
 
 void init(){
+  lockedOn = false;
+  //645, 420, 650, 30
+  handleX = 645;
+  handleY = 420;
+  handleWidth = 650;
+  handleHeight = 30;
+  
+  containerX = 620;
+  containerY = 600;
+  containerWidth = 700;
+  containerHeight = 300;
+  
   atoms = new ArrayList<Atom>();
   particles = new ArrayList<Particle>();
   for (int i = 0; i<10; i++) {
     for (int j = 0; j<12; j++) {
-      atoms.add(new Atom(143, 92, 145+i*70, 330+j*20));
+      atoms.add(new Atom(143, 92, containerX+20+i*70, containerY+20+j*20));
     }
   }
   controlRods = new ControlRod[4];
-  int x = width/4-10;
+  int x = containerWidth+40;
   for (int i=0; i<4; i++) {
-    controlRods[i] = new ControlRod(x, 250);
-    x+=700/5;
+    controlRods[i] = new ControlRod(x, 455);
+    x+=containerWidth/5;
   }
-  
+
   if (mousePressed==true) {
     mouseClicked();
   }
@@ -33,14 +49,14 @@ void init(){
 
 
 void draw() {
-  update(mouseX, mouseY);
   background(#FFFFFF);
   fireNeutronsButton();
   resetButton();
   moveControlRodsButton();
   fill(#A7D3F0);
   strokeWeight(10);
-  rect(120, 300, 700, 300);
+
+  rect(containerX, containerY, containerWidth, containerHeight);
   strokeWeight(1);
   for (int i=0; i<atoms.size(); i++) {
     atoms.get(i).step();
@@ -61,8 +77,40 @@ void draw() {
     if(!rodUp){
       controlRods[i].absorb(particles);
       controlRods[i].display();
-      //rodDown=false;
+      //controlRods[i].setHeight();
     }
+
+ /*if(rodUp){
+      controlRods[i].absorb(particles);
+      controlRods[i].display();
+
+
+      if(controlRods[i].getHeight() > 150){
+            int x= width/4-10;
+     // for(int j= 0 ; j<4 ; j++){
+    controlRods[0].moveUp(x, 250);
+    x+= 700/5;
+
+    controlRods[1].moveUp(x,250);
+    x+= 700/5;
+
+     controlRods[2].moveUp(x,250);
+    x+= 700/5;
+
+
+     controlRods[3].moveUp(x,250);
+    x+= 700/5;
+      }
+
+
+
+     //}
+
+
+      //rodDown=false;
+    }*/
+
+
     //controlRods[i].step();
   }
   displayEnergyBar();
@@ -70,78 +118,51 @@ void draw() {
 }
 
 
-void mousePressed() {
-  if (overFire()) {
-    fire=true;
-  }else if(overUp() && !rodUp){
-    rodUp=true;
-  }
-  else if(overUp() && rodUp){
-    rodUp=false;
-  }
-  if(resetSimulation()){
-    init();
-  }
-  /*if(overDown()){
-    rodDown=true;
-  }*/
-}
-
-void update(int x, int y){
-  //if(overUp()){
-    //rodUp = true;
-   // rodDown = false;
-  /*} else if (overDown()){
-    rodUp = false;
-    rodDown = true;
-  }*/ //else {
-    //rodUp = false;
-  //}
-}
 
 
 void fireNeutronsButton() {
   strokeWeight(2);
   fill(#FFFFFF);
-  rect(645, 70, 50, 50);
+  rect(width-100, 70, 50, 50);
   fill(#D61A1D);
-  ellipse(670, 95, 30, 30);
+  ellipse(width-100+24, 95, 30, 30);
   fill(#000501);
   textSize(32);
-  text("F I R E     N E U T R O N S", 247, 110);
+  text("F I R E     N E U T R O N S", width-600, 110);
 }
 void resetButton(){
   strokeWeight(2);
   fill(#FFFFFF);
-  rect(600, 140, 50, 50);
+  rect(width-100, 140, 50, 50);
   fill(#D61A1D);
-  ellipse(625, 165, 30, 30);
+  ellipse(width-100+25, 165, 30, 30);
   fill(#000501);
   textSize(32);
-  text("RESET SIMULATION", 247, 180);
+  text("RESET SIMULATION", width-600, 180);
 }
 
 void moveControlRodsButton(){
   fill(#EAE126);
-  rect(width/4-11, 219, 650, 30);
+  rect(handleX, handleY, handleWidth, handleHeight);
   fill(#050500);
   textSize(24);
-  text("C O N T R O L     R O D S", width/4+80, 244);
+  text("C O N T R O L     R O D S", 800, handleY+25);
   fill(#FFFFFF);
   strokeWeight(2);
-  rect(870, 200, 70, 70);
+  
+  rect(1300, 400, 70, 70);
   if(overUp()){
     fill(#32CE5D);
-    ellipse(905, 235, 50, 50);
+    ellipse(1335, 435, 60, 60);
   } else {
     fill(#D61A1D);
-    ellipse(905, 235, 50, 50); //Button
+    ellipse(1335, 435, 60, 60); //Button
   }
   //ellipse(905, 300, 50, 50);
 }
 
 boolean overFire() {
-  if (mouseX>=645 && mouseX<=695 && mouseY>=70 && mouseY<=120) {
+  if (mouseX>=width-100 && mouseX<=width-50 && mouseY>=70 && mouseY<=95) {
     return true;
   } else {
     return false;
@@ -149,15 +170,22 @@ boolean overFire() {
 }
 
 boolean overUp(){
-  if (mouseX>=880 && mouseX<=930 && mouseY>=210 && mouseY<=260){
-    return true  ;
+  if (mouseX>=1300 && mouseX<=1370 && mouseY>=400 && mouseY<=470){
+    return true;
   } else {
     return false;
   }
 }
 
+boolean overHandle(){
+  if(mouseX>=handleX && mouseX<=handleX+handleWidth && mouseY>=handleY && mouseY <= handleY+handleHeight) 
+    return true;
+  else 
+    return false;
+}
+
 boolean resetSimulation(){
-   if (mouseX>=600 && mouseX<=650 && mouseY>=140 && mouseY<=190){
+   if (mouseX>=width-100 && mouseX<=width-50 && mouseY>=140 && mouseY<=190){
     return true;
   } else{
     return false;
@@ -171,4 +199,35 @@ void displayEnergyBar(){
   fill(#D61A1D);
   strokeWeight(5);
   rect((6*width/7),height/2+200-energy,40,energy);
+}
+
+void mousePressed() {
+  if (overFire()) {
+    fire=true;
+  }
+  if(resetSimulation()){
+    init();
+  }
+  
+  if(overHandle()){
+    lockedOn = true;
+  }else{
+    lockedOn = false;
+  }
+  yOffSet = mouseY-handleY;
+}
+
+void mouseDragged() {
+  int y = mouseY;
+  y = constrain(y, 420 - containerHeight+yOffSet, 420+yOffSet);
+  if(lockedOn){
+    handleY = y - yOffSet;
+    for(int i =0 ; i<controlRods.length;i++){
+      controlRods[i].setY(handleY+handleHeight);
+    }
+  }
+}
+
+void mouseReleased() {
+  lockedOn = false;
 }

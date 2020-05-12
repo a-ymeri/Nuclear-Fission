@@ -4,13 +4,13 @@ class Particle{
   PVector acceleration;
   PVector velocity;
   int topSpeed;
-   
-     
+
+
   Particle(){
     mass = 1;
-    float y = random(305,595);
-    int x = int(random(1,5))*580/5+125;
-    
+    float y = random(600,900);
+    int x = int(random(1,5))*620/5+700;
+
     float velocityX = random(-1,1);
     float velocityY = random(-1,1);
     location = new PVector(x,y);
@@ -27,22 +27,22 @@ class Particle{
     acceleration = new PVector(0, 0);
     topSpeed = 2;
   }
-  
+
   void display(){
     fill(#1AD64D);
     strokeWeight(1);
     ellipse(location.x, location.y, 5*mass, 5*mass);
   }
-  
+
   void step(){
     velocity.add(acceleration);
     velocity.limit(topSpeed);
     location.add(velocity);
     acceleration = new PVector(0,0);
   }
-  
+
   void bounceOnEdges(){
-    if(location.x<125 || location.x>815) velocity.x *= -1;
-    if(location.y<305 || location.y>595) velocity.y *= -1;
+    if(location.x<630 || location.x>1310) velocity.x *= -1;
+    if(location.y<610 || location.y>880) velocity.y *= -1;
   }
 }
