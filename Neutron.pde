@@ -1,41 +1,73 @@
-class Neutron{
-  
+class Neutron {
+
   PVector location;
   PVector velocity;
   float mass;
   float topSpeed = 10;
-  
-  
-  Neutron(float x, float y){
-    location = new PVector(x,y);
-    velocity = new PVector(20,0);
+  float attractDistance = 100;
+  float repulseDistance = 5;
+
+
+  Neutron(float x, float y) {
+    location = new PVector(x, y);
+    velocity = new PVector(5, 0);
     mass=1;
   }
-  
-  
-  
-  void display(){
+
+
+
+  void display() {
     //noStroke();
     //stroke(#FFFFFF);
     fill(#2746F0);
-    ellipse(location.x, location.y, 15*mass,15*mass);
-    
+    ellipse(location.x, location.y, 15*mass, 15*mass);
   }
-  
-  void step(){
-    location = new PVector(random(500,550),random(200,250));
+
+  void step(PVector center) {
+    /*attracted(protons);
+    repulsed(neutrons);
+    location.add(velocity);
+    location.x = constrain(location.x,450,550);
+    location.y = constrain(location.y,200,250);*/
+    float radius = 50;
+    PVector randomLocation;
+    float randomX, randomY;
+    do{
+    randomX = random(center.x-radius,center.x+radius);
+    randomY = random(center.y-radius,center.y+radius);
+    randomLocation = new PVector(randomX, randomY);
+    randomLocation.sub(center);
+    }while(randomLocation.mag() > radius);
+    location = new PVector(randomX,randomY);
   }
-  
-  void fire(){
+
+  void fire() {
     location.add(velocity);
   }
-  
-  void remove(){
-    mass = 0;
+
+  void attracted(Proton[] protons) {
+    for (Proton p : protons) {
+      PVector direction = PVector.sub(p.location, this.location);
+      float distance = direction.mag();
+      if (distance<attractDistance) {
+        velocity.add(direction.mult(1));
+        velocity.limit(topSpeed);
+      }
+    }
   }
   
-  
-  
-  
-  
+  void repulsed(Neutron[] neutrons){
+    for( Neutron n: neutrons){
+      PVector direction = PVector.sub(this.location, n.location);
+      float distance = direction.mag();
+      if (distance<repulseDistance) {
+        velocity.add(direction.mult(0.01));
+        velocity.limit(topSpeed);
+      }
+    }
+  }
+
+  void remove() {
+    mass = 0;
+  }
 }
