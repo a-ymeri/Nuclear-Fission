@@ -16,10 +16,10 @@ class Atom2 {
     velocity = new PVector(0, 0);
     font1 = createFont("Helvetica-Bold", 25);
     for (int i = 0; i<p.length; i++) {
-      p[i] = new Proton(random(350, 550), random(100, 250));
+      p[i] = new Proton(random(475, 575), random(225, 275));
     }
     for (int i = 0; i<n.length; i++) {
-      n[i] = new Neutron(random(350, 550), random(100, 250));
+      n[i] = new Neutron(random(475, 575), random(225, 275));
     }
   }
 
@@ -44,7 +44,7 @@ class Atom2 {
 
   ArrayList<Atom2> splitAtom(Neutron n) {
     ArrayList<Atom2> al = new ArrayList<Atom2>();
-    if (p.length>15) {
+    if (p.length>41) {
       Atom2 a1,a2;
       if (n.location.x>=530) {
         n.remove();
@@ -60,14 +60,14 @@ class Atom2 {
   }
 
   Atom2 createBarium() {
-    Atom2 barium = new Atom2(10, 10, location.x+20, location.y+20);
-    barium.setVelocity(5, -5);
+    Atom2 barium = new Atom2(40, 40, location.x+20, location.y+20);
+    barium.setVelocity(10, -10);
     return barium;
   }
 
   Atom2 createKrypton() {
-    Atom2 krypton = new Atom2(10, 10, location.x+20, location.y+20);
-    krypton.setVelocity(5, 5);
+    Atom2 krypton = new Atom2(20, 20, location.x+20, location.y+20);
+    krypton.setVelocity(10, 10);
     return krypton;
   }
 
@@ -76,7 +76,7 @@ class Atom2 {
   }
   
   boolean reachedEdge(){
-    if(location.x>=width-250){
+    if(location.x>=width-250 && velocity.x >0){
       return true;
     }
     return false;

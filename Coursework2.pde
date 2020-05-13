@@ -11,15 +11,17 @@ boolean fire = false;
 void setup() {
   size(1000, 700);
   frameRate(15);
-  al = new ArrayList<Atom2>();
   init();
 }
 
 void init() {
+  al = new ArrayList<Atom2>();
   img = loadImage("gun.jpg");
-  u = new Atom2(16, 16, 525, 225);
+  u = new Atom2(60, 60, 525, 225);
   n = new Neutron(266, 220);
   al.add(u);
+  Atom2 legendAtom = new Atom2(15, 15, width-120, height/2+40);
+  al.add(legendAtom);
   if (mousePressed==true) {
     mouseClicked();
   }
@@ -145,6 +147,7 @@ void legend() {
    n[i].display();
    n[i].step(p,n);
    }*/
+
 
   fill(#26DB51);
   textSize(20);
