@@ -8,9 +8,9 @@ class Neutron {
   float repulseDistance = 5;
 
 
-  Neutron(float x, float y) {
-    location = new PVector(x, y);
-    velocity = new PVector(5, 0);
+  Neutron(float lx, float ly, float vx, float vy) {
+    location = new PVector(lx, ly);
+    velocity = new PVector(vx, vy);
     mass=1;
   }
 
@@ -29,6 +29,11 @@ class Neutron {
     location.add(velocity);
     location.x = constrain(location.x,450,550);
     location.y = constrain(location.y,200,250);*/
+    location.add(velocity);
+    chaoticStep(center);
+  }
+
+  void chaoticStep(PVector center){
     float radius = 50;
     PVector randomLocation;
     float randomX, randomY;
@@ -40,7 +45,7 @@ class Neutron {
     }while(randomLocation.mag() > radius);
     location = new PVector(randomX,randomY);
   }
-
+  
   void fire() {
     location.add(velocity);
   }

@@ -4,6 +4,7 @@ Atom2 u;
 Neutron n;
 
 ArrayList<Atom2> al;
+ArrayList<Neutron> neutrons;
 
 PImage img;
 boolean fire = false;
@@ -16,9 +17,11 @@ void setup() {
 
 void init() {
   al = new ArrayList<Atom2>();
+  neutrons = new ArrayList<Neutron>();
   img = loadImage("gun.jpg");
   u = new Atom2(60, 60, 525, 225);
-  n = new Neutron(266, 220);
+  n = new Neutron(266, 220, 5, 0);
+  
   al.add(u);
   Atom2 legendAtom = new Atom2(15, 15, width-120, height/2+40);
   al.add(legendAtom);
@@ -32,7 +35,11 @@ void draw() {
   legend();
   fireButton();
   resetButton();
-
+  
+  for(int i = 0; i<neutrons.size();i++){
+    neutrons.get(i).display();
+    neutrons.get(i).fire();
+  }
   for (int i = 0; i<al.size(); i++) {
     al.get(i).step();
     if (al.get(i).reachedEdge()) {
@@ -41,6 +48,7 @@ void draw() {
   }
   if (fire) {
     n.display();
+    //neutrons.add(n);
     n.fire();
   }
   if (al.size()>0) {
@@ -49,6 +57,15 @@ void draw() {
       al.remove(0);
       al.addAll(a);
       fire = false;
+      neutrons.remove(n);
+      
+      //TEMPORARY FIX
+      Neutron neutron1 = new Neutron(525,225,-7,-7);
+      Neutron neutron2 = new Neutron(525,225,0,10);
+      Neutron neutron3 = new Neutron(525,225,-7,7);
+      neutrons.add(neutron1);
+      neutrons.add(neutron2);
+      neutrons.add(neutron3);
     }
   }
 }

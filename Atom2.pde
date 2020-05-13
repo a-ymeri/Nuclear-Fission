@@ -19,7 +19,7 @@ class Atom2 {
       p[i] = new Proton(random(475, 575), random(225, 275));
     }
     for (int i = 0; i<n.length; i++) {
-      n[i] = new Neutron(random(475, 575), random(225, 275));
+      n[i] = new Neutron(random(475, 575), random(225, 275), 0, 0);
     }
   }
 
@@ -40,13 +40,17 @@ class Atom2 {
   void step() {
       location.add(velocity);
       display();
+      for(int i =0; i<p.length;i++){
+        //p[i].display();
+        //n[i].display();
+      }
   }
 
   ArrayList<Atom2> splitAtom(Neutron n) {
     ArrayList<Atom2> al = new ArrayList<Atom2>();
     if (p.length>41) {
       Atom2 a1,a2;
-      if (n.location.x>=530) {
+      if (n.location.x>=480) {
         n.remove();
         //al.add(createBarium());
         a1 = createBarium();
