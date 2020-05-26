@@ -38,7 +38,7 @@ void init(){
   controlRods = new ControlRod[4];
   int x = containerWidth+40;
   for (int i=0; i<4; i++) {
-    controlRods[i] = new ControlRod(x, 455);
+    controlRods[i] = new ControlRod(x, 450);
     x+=containerWidth/5;
   }
 
@@ -65,13 +65,13 @@ void draw() {
     if(energy>200) energy=200;
   }
   if (fire) {
-    particles.add(new Particle());
+    particles.add(new Particle(containerX,containerY,containerWidth,containerHeight));
     fire = false;
   }
   for (int i = 0; i<particles.size(); i++) {
     particles.get(i).display();
     particles.get(i).step();
-    particles.get(i).bounceOnEdges();
+    particles.get(i).bounceOnEdges(containerX, containerY, containerWidth, containerHeight);
   }
   for (int i = 0; i<controlRods.length;i++){
     if(!rodUp){
@@ -79,39 +79,6 @@ void draw() {
       controlRods[i].display();
       //controlRods[i].setHeight();
     }
-
- /*if(rodUp){
-      controlRods[i].absorb(particles);
-      controlRods[i].display();
-
-
-      if(controlRods[i].getHeight() > 150){
-            int x= width/4-10;
-     // for(int j= 0 ; j<4 ; j++){
-    controlRods[0].moveUp(x, 250);
-    x+= 700/5;
-
-    controlRods[1].moveUp(x,250);
-    x+= 700/5;
-
-     controlRods[2].moveUp(x,250);
-    x+= 700/5;
-
-
-     controlRods[3].moveUp(x,250);
-    x+= 700/5;
-      }
-
-
-
-     //}
-
-
-      //rodDown=false;
-    }*/
-
-
-    //controlRods[i].step();
   }
   displayEnergyBar();
   energy=energy*0.992;
@@ -147,22 +114,10 @@ void moveControlRodsButton(){
   fill(#050500);
   textSize(24);
   text("C O N T R O L     R O D S", 800, handleY+25);
-  fill(#FFFFFF);
-  strokeWeight(2);
-  
-  rect(1300, 400, 70, 70);
-  if(overUp()){
-    fill(#32CE5D);
-    ellipse(1335, 435, 60, 60);
-  } else {
-    fill(#D61A1D);
-    ellipse(1335, 435, 60, 60); //Button
-  }
-  //ellipse(905, 300, 50, 50);
 }
 
 boolean overFire() {
-  if (mouseX>=width-100 && mouseX<=width-50 && mouseY>=70 && mouseY<=95) {
+  if (mouseX>=width-100 && mouseX<=width-50 && mouseY>=70 && mouseY<=120) {
     return true;
   } else {
     return false;
@@ -204,17 +159,16 @@ void displayEnergyBar(){
 void mousePressed() {
   if (overFire()) {
     fire=true;
-  }
-  if(resetSimulation()){
+  }else if(resetSimulation()){
     init();
-  }
-  
+  }else{
   if(overHandle()){
     lockedOn = true;
   }else{
     lockedOn = false;
   }
   yOffSet = mouseY-handleY;
+  }
 }
 
 void mouseDragged() {

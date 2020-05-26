@@ -6,10 +6,10 @@ class Particle{
   int topSpeed;
 
 
-  Particle(){
+  Particle(int conX,int conY, int conW, int conH){
     mass = 1;
-    float y = random(600,900);
-    int x = int(random(1,5))*620/5+700;
+    float y = random(conY+10,conY+conH-10);
+    int x = int(random(1,5))*conX/5+conW;
 
     float velocityX = random(-1,1);
     float velocityY = random(-1,1);
@@ -41,8 +41,8 @@ class Particle{
     acceleration = new PVector(0,0);
   }
 
-  void bounceOnEdges(){
-    if(location.x<630 || location.x>1310) velocity.x *= -1;
-    if(location.y<610 || location.y>880) velocity.y *= -1;
+  void bounceOnEdges(int conX, int conY, int conW, int conH){
+    if(location.x<conX+5 || location.x>conX+conW-5) velocity.x *= -1;
+    if(location.y<conY+5 || location.y>conY+conH-5) velocity.y *= -1;
   }
 }
