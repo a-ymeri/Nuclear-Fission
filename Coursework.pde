@@ -1,3 +1,5 @@
+import g4p_controls.*;
+
 ArrayList<Atom> atoms;
 ControlRod[] controlRods;
 ArrayList<Particle> particles;
@@ -5,21 +7,29 @@ boolean fire = false;
 boolean rodUp = false;
 float energy;
 boolean lockedOn;
+ArrayList <GSlider> sliders;
+GSlider simulationSlider, uraniumSlider;
 
 int handleX,handleY, handleWidth, handleHeight;
 int containerX, containerY, containerWidth, containerHeight;
 int yOffSet;
 void setup() {
+  
+  sliders = new ArrayList<GSlider>();
+  setupSliders();
+  
+  
   size(1920, 1080);
-  frameRate(50);
+  frameRate(120);
   init();
 }
 
 void init(){
+  energy = 0;
   lockedOn = false;
   //645, 420, 650, 30
   handleX = 645;
-  handleY = 420;
+  handleY = 480;
   handleWidth = 650;
   handleHeight = 30;
   
@@ -28,17 +38,29 @@ void init(){
   containerWidth = 700;
   containerHeight = 300;
   
+  
+  //slider.setOpaque(true);
+  
   atoms = new ArrayList<Atom>();
   particles = new ArrayList<Particle>();
-  for (int i = 0; i<10; i++) {
-    for (int j = 0; j<12; j++) {
-      atoms.add(new Atom(143, 92, containerX+20+i*70, containerY+20+j*20));
-    }
+  
+  int uraniumNumber = uraniumSlider.getValueI();
+  int atomX,atomY;
+  int counter=0;
+  while(counter<uraniumNumber){
+    atomX = counter%10;
+    atomY = counter/10;
+  //for (int i = 0; i<10; i++) {
+  //  for (int j = 0; j<12; j++) {
+      atoms.add(new Atom(143, 92, containerX+20+atomX*70, containerY+20+atomY*20));
+  //  }
+  //}
+    counter++;
   }
   controlRods = new ControlRod[4];
   int x = containerWidth+40;
   for (int i=0; i<4; i++) {
-    controlRods[i] = new ControlRod(x, 450);
+    controlRods[i] = new ControlRod(x, 510);
     x+=containerWidth/5;
   }
 
@@ -49,39 +71,42 @@ void init(){
 
 
 void draw() {
-  background(#FFFFFF);
-  fireNeutronsButton();
-  resetButton();
-  moveControlRodsButton();
-  fill(#A7D3F0);
-  strokeWeight(10);
-
-  rect(containerX, containerY, containerWidth, containerHeight);
-  strokeWeight(1);
-  for (int i=0; i<atoms.size(); i++) {
-    atoms.get(i).step();
-    atoms.get(i).display();
-    energy+=atoms.get(i).collide(particles, atoms);
-    if(energy>200) energy=200;
-  }
-  if (fire) {
-    particles.add(new Particle(containerX,containerY,containerWidth,containerHeight));
-    fire = false;
-  }
-  for (int i = 0; i<particles.size(); i++) {
-    particles.get(i).display();
-    particles.get(i).step();
-    particles.get(i).bounceOnEdges(containerX, containerY, containerWidth, containerHeight);
-  }
-  for (int i = 0; i<controlRods.length;i++){
-    if(!rodUp){
-      controlRods[i].absorb(particles);
-      controlRods[i].display();
-      //controlRods[i].setHeight();
+  if(frameCount % (int)(2/simulationSlider.getValueF()) == 0){
+    background(#FFFFFF);
+    fireNeutronsButton();
+    resetButton();
+    moveControlRodsButton();
+    slider();
+    fill(#A7D3F0);
+    strokeWeight(10);
+  
+    rect(containerX, containerY, containerWidth, containerHeight);
+    strokeWeight(1);
+    for (int i=0; i<atoms.size(); i++) {
+      atoms.get(i).step();
+      atoms.get(i).display();
+      energy+=atoms.get(i).collide(particles, atoms);
+      if(energy>200) energy=200;
     }
+    if (fire) {
+      particles.add(new Particle(containerX,containerY,containerWidth,containerHeight));
+      fire = false;
+    }
+    for (int i = 0; i<particles.size(); i++) {
+      particles.get(i).display();
+      particles.get(i).step();
+      particles.get(i).bounceOnEdges(containerX, containerY, containerWidth, containerHeight);
+    }
+    for (int i = 0; i<controlRods.length;i++){
+      if(!rodUp){
+        controlRods[i].absorb(particles);
+        controlRods[i].display();
+        //controlRods[i].setHeight();
+      }
+    }
+    displayEnergyBar();
+    energy=energy*0.992;
   }
-  displayEnergyBar();
-  energy=energy*0.992;
 }
 
 
@@ -107,7 +132,10 @@ void resetButton(){
   textSize(32);
   text("RESET SIMULATION", width-600, 180);
 }
-
+void slider(){
+  textSize(16);
+  text("Simulation speed", width-320, height/3-10);
+}
 void moveControlRodsButton(){
   fill(#EAE126);
   rect(handleX, handleY, handleWidth, handleHeight);
@@ -147,33 +175,67 @@ boolean resetSimulation(){
   }
 }
 
+boolean overUraniumSetter(){
+   if (mouseX>=width-100 && mouseX<=width-50 && mouseY>=140 && mouseY<=190){
+    return true;
+  } else{
+    return false;
+  }
+}
+
+
+
 void displayEnergyBar(){
   fill(#666666);
-  strokeWeight(5);
-  rect(width-width/7,height/2,40,200);
+  strokeWeight(1);
+  rect(width-500,height/2+100,40,200);
   fill(#D61A1D);
-  strokeWeight(5);
-  rect((6*width/7),height/2+200-energy,40,energy);
+  strokeWeight(0);
+  rect(width-500,height/2+300-energy,40,energy);
+}
+
+void setupSliders(){
+  
+  simulationSlider = new GSlider(this,width-400,height/3,300,60,10);  
+  simulationSlider.setLimits(1, 0.5, 2);
+  simulationSlider.setNbrTicks(8);
+  simulationSlider.setNumberFormat(G4P.DECIMAL,0);
+  
+  uraniumSlider = new GSlider(this, width-400, height/3+200,300, 60, 10);
+  uraniumSlider.setLimits(60, 30, 120);
+  uraniumSlider.setNbrTicks(12);
+  uraniumSlider.setNumberFormat(G4P.INTEGER,0);
+  
+  sliders.add(simulationSlider);
+  sliders.add(uraniumSlider);
+  
+  for(GSlider gs : sliders){
+    gs.setShowValue(true);
+    gs.setShowLimits(true);
+    gs.setShowTicks(true);
+    gs.setEasing(6.0);
+    
+  }
 }
 
 void mousePressed() {
   if (overFire()) {
     fire=true;
-  }else if(resetSimulation()){
+  }else if(resetSimulation() || overUraniumSetter()){
     init();
   }else{
-  if(overHandle()){
-    lockedOn = true;
-  }else{
-    lockedOn = false;
-  }
+    if(overHandle()){
+      lockedOn = true;
+    }else{
+      lockedOn = false;
+    }
   yOffSet = mouseY-handleY;
   }
 }
 
 void mouseDragged() {
   int y = mouseY;
-  y = constrain(y, 420 - containerHeight+yOffSet, 420+yOffSet);
+  y = constrain(y, 480 - containerHeight+yOffSet, 480+yOffSet);
   if(lockedOn){
     handleY = y - yOffSet;
     for(int i =0 ; i<controlRods.length;i++){
