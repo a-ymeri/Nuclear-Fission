@@ -135,6 +135,8 @@ void resetButton(){
 void slider(){
   textSize(16);
   text("Simulation speed", width-320, height/3-10);
+  textSize(16);
+  text("Number of uraniums", width-320, height/3+190);
 }
 void moveControlRodsButton(){
   fill(#EAE126);
