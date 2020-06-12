@@ -6,7 +6,7 @@ class ControlRod {
 
   ControlRod(int x, int y) {
     _width = 30;
-    _height = 390;
+    _height = 345;
     location = new PVector(x, y);
     out = new PVector(x, y-100);
   }
