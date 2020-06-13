@@ -18,18 +18,19 @@ int wContainerX, wContainerY, wContainerWidth, wContainerHeight;
 int yOffSet;
 int energyCounter;
 PImage turbine;
-
-
+boolean sim2 = false;
+CloseUp c;
 
 void setup() {
 
   sliders = new ArrayList<GSlider>();
   setupSliders();
 
-
+  c = new CloseUp();
   size(1920, 1080);
-  frameRate(60);
+  frameRate(30);
   init();
+  c.init1();
 }
 
 void init() {
@@ -76,7 +77,10 @@ void init() {
 
 
 void draw() {
-
+  if(sim2){
+    c.draw1();
+  }else
+  {
   background(#FFFFFF);
   fireNeutronsButton();
   resetButton();
@@ -144,6 +148,9 @@ void draw() {
   displayEnergy();
   displayTurbine();
   displayEnergyBar();
+  changeSimulationButton();
+  }
+    
 }
 
 
@@ -191,6 +198,17 @@ void moveControlRodsButton() {
   text("C O N T R O L     R O D S", 2*handleX, handleY+25);
 }
 
+void changeSimulationButton(){
+  strokeWeight(2);
+  fill(#FFFFFF);
+  rect(150, 100, 50, 50);
+  fill(#D61A1D);
+  ellipse(175, 125, 30, 30);
+  fill(#000501);
+  textSize(32);
+  text("Change simulation", 30, 80);
+}
+
 boolean overFire() {
   if (mouseX>=width-100 && mouseX<=width-50 && mouseY>=70 && mouseY<=120) {
     return true;
@@ -224,6 +242,14 @@ boolean resetSimulation() {
 
 boolean overUraniumSetter() {
   if (mouseX>=width-100 && mouseX<=width-50 && mouseY>=140 && mouseY<=190) {
+    return true;
+  } else {
+    return false;
+  }
+}
+
+boolean changeSimulation(){
+  if (mouseX>=150 && mouseX<=200 && mouseY>=100 && mouseY<=150) {
     return true;
   } else {
     return false;
@@ -374,17 +400,30 @@ void drawPipes() {
 }
 
 void mousePressed() {
-  if (overFire()) {
-    fire=true;
-  } else if (resetSimulation() || overUraniumSetter()) {
-    init();
-  } else {
-    if (overHandle()) {
-      lockedOn = true;
+  if(changeSimulation()){
+    sim2 = !sim2;
+  }
+  if(!sim2){
+    if (overFire()) {
+      fire=true;
+    } 
+    else if (resetSimulation()) {
+      init();
     } else {
-      lockedOn = false;
+      if (overHandle()) {
+        lockedOn = true;
+      } else {
+        lockedOn = false;
+      }
+      yOffSet = mouseY-handleY;
     }
-    yOffSet = mouseY-handleY;
+  }else{
+    if (c.overFire()) {
+      c.fire=true;
+    } else if (c.resetSimulation()) {
+      c.init1();
+      c.fire = false;
+    }
   }
 }
 
