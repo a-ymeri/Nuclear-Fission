@@ -272,7 +272,6 @@ void displayEnergy() {
     i++;
     if (max<p.y) max=p.y;
   }
-  System.out.println(max);
 }
 
 void displayEnergyBar() {
@@ -392,9 +391,10 @@ void drawPipes() {
   rect(width-890, height-370, 20, 85);
   rect(width-763, height-290, 20, 60);
   //Pipes above water boiler
+  fill(#999999);
   rect(width-784, height-1000, 30, 307);
   rect(width-1034, height-1000, 250, 30);
-//Water surface
+  //Water surface
   fill(#649cf5);
   ellipse((wContainerX+5+(wContainerWidth-10)/2), wContainerY+105, wContainerWidth-10, 30);
 }
