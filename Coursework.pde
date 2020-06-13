@@ -275,7 +275,6 @@ void displayEnergy() {
 }
 
 void displayEnergyBar() {
-
   image(img, width-500, height/2+100, 40, 180);
 
   fill(#666666);
@@ -394,6 +393,7 @@ void drawPipes() {
   fill(#999999);
   rect(width-784, height-1000, 30, 307);
   rect(width-1034, height-1000, 250, 30);
+  rect(wContainerX+5,wContainerY+5, wContainerWidth-10, 100);
   //Water surface
   fill(#649cf5);
   ellipse((wContainerX+5+(wContainerWidth-10)/2), wContainerY+105, wContainerWidth-10, 30);
